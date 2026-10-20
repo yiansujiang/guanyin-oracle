@@ -1,0 +1,1943 @@
+<!-- STREAMING_CHUNK:Configuring the document head and external libraries... -->
+<!DOCTYPE html>
+<!-- APP_VERSION: v9.8 -->
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>《過劫.十大觀音靈籤》拍立得｜量子實體熵值演算 v9.8</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <!-- Babel -->
+  <script src="https://unpkg.com/@babel/standalone@7.23.6/babel.min.js"></script>
+  
+  <!-- html2canvas -->
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+  <!-- QRCode.js（v9.9 新增：產生上台合影掃碼；載入失敗會自動改顯示籤號供手動輸入） -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;750&family=Noto+Serif+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <style>
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background-color: #030408; 
+      color: #f8fafc;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .film-grain {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    .font-serif-tc, .font-serif { font-family: 'Noto Serif TC', serif; }
+    .font-cinzel { font-family: 'Cinzel', serif; }
+
+    #fluid-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -1;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .perspective-stage {
+      perspective: 1500px;
+    }
+
+    .camera-luxury-body {
+      background-color: #0c0f1a;
+      background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='3' cy='3' r='1' fill='%23ffffff' fill-opacity='0.02'/%3E%3C/svg%3E");
+      border: 1px solid rgba(245, 158, 11, 0.18); 
+      box-shadow: 
+        0 40px 110px -20px rgba(0, 0, 0, 0.98),
+        inset 0 1px 2px rgba(255, 255, 255, 0.08),
+        inset 0 -4px 12px rgba(0, 0, 0, 0.95);
+    }
+
+    .gold-trim {
+      background: linear-gradient(90deg, #b45309, #fbbf24, #d97706, #fbbf24, #78350f);
+      height: 2px;
+      opacity: 0.75;
+    }
+
+    .aperture-blade {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-top: 1px solid rgba(251, 191, 36, 0.08);
+      transform-origin: 50% 50%;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes shutter-spring {
+      0% { transform: scale(1); filter: brightness(1) contrast(1); }
+      30% { transform: scale(0.95); filter: brightness(0.02) contrast(1.8); }
+      70% { transform: scale(1.03); filter: brightness(1.3) contrast(0.85); }
+      100% { transform: scale(1); filter: brightness(1) contrast(1); }
+    }
+    .shutter-active {
+      animation: shutter-spring 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    @keyframes premium-print {
+      0% { transform: translate(-50%, -105%) translateZ(-20px); opacity: 0; filter: brightness(0.1); }
+      15% { opacity: 1; }
+      100% { transform: translate(-50%, 85%) translateZ(-20px); opacity: 1; filter: brightness(1); }
+    }
+    .animate-print {
+      animation: premium-print 2.0s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .luxury-photo-card {
+      transition: transform 0.1s ease-out, box-shadow 0.6s ease;
+      transform-style: preserve-3d;
+      background: #ffffff;
+      padding: 16px 16px 74px 16px; 
+      border-radius: 4px;
+      position: relative;
+      box-shadow: 
+        0 25px 55px rgba(0, 0, 0, 0.8),
+        inset 0 0 0 1px rgba(0,0,0,0.05);
+    }
+
+    .polaroid-image-container {
+      background-color: #050608; 
+      width: 100%; 
+      aspect-ratio: 9/16; 
+      overflow: hidden;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      position: relative;
+      box-shadow: 
+        inset 0 5px 12px rgba(0,0,0,0.9),
+        inset 0 -1px 3px rgba(255,255,255,0.08);
+    }
+
+    .polaroid-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @keyframes premium-develop {
+      0% { filter: brightness(10) blur(30px) contrast(0.4) sepia(100%); opacity: 0; }
+      25% { opacity: 0.9; }
+      100% { filter: brightness(1) blur(0px) contrast(1) sepia(0%); opacity: 1; }
+    }
+    .developing-photo {
+      animation: premium-develop 4.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    .photo-glare {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(115deg, rgba(255,255,255,0) 35%, rgba(255,255,255,0.28) 48%, rgba(255,255,255,0) 58%);
+      pointer-events: none;
+      z-index: 10;
+      mix-blend-mode: overlay;
+    }
+
+    @keyframes flash-burst {
+      0% { opacity: 0; }
+      8% { opacity: 1; background: #ffffff; }
+      100% { opacity: 0; }
+    }
+    .camera-flash {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 9999;
+    }
+    .animate-flash {
+      animation: flash-burst 0.7s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+    }
+
+    .paper-texture {
+      background-color: #faf6eb;
+      background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperNoise)' opacity='0.15'/%3E%3C/svg%3E");
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.08);
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .polaroid-text {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 74px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #1c1917;
+      font-family: 'Noto Serif TC', serif;
+      letter-spacing: 0.15em;
+    }
+
+    .snapshot-mode .luxury-photo-card {
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    .snapshot-mode .developing-photo {
+      animation: none !important;
+      filter: none !important;
+      opacity: 1 !important;
+    }
+    .snapshot-mode .photo-glare {
+      display: none !important;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #030408; }
+    ::-webkit-scrollbar-thumb { background: #111827; border-radius: 10px; }
+    
+    /* 疊加態字體發光閃爍效果 */
+    .superposition-text {
+      animation: quantum-glitch 0.15s infinite;
+      text-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
+    }
+    @keyframes quantum-glitch {
+      0% { opacity: 0.8; transform: skewX(0deg); }
+      50% { opacity: 1; transform: skewX(-2deg); }
+      100% { opacity: 0.9; transform: skewX(2deg); }
+    }
+
+    /* ── U1：idle 引導提示呼吸脈衝 ── */
+    @keyframes breath-pulse {
+      0%, 100% { opacity: 0.45; transform: scale(1); }
+      50%       { opacity: 0.85; transform: scale(1.04); }
+    }
+    .guide-hint {
+      animation: breath-pulse 2.8s ease-in-out infinite;
+    }
+
+    /* ── U2：drawing 狀態大字提示淡入 ── */
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .drawing-hint {
+      animation: fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* ── U3：行動端 result 底部快捷 Bar ── */
+    .mobile-action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 60;
+      padding: 12px 20px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(to top, rgba(3,4,8,0.98) 70%, rgba(3,4,8,0));
+      display: flex;
+      gap: 10px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    /* 桌機隱藏 */
+    @media (min-width: 1024px) {
+      .mobile-action-bar { display: none; }
+    }
+
+    /* ── U4：首次進入 Toast Banner ── */
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes toast-out {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(-16px); }
+    }
+    .toast-banner {
+      animation: toast-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .toast-banner.hiding {
+      animation: toast-out 0.4s ease-in forwards;
+    }
+
+    /* ── U5：儀表板 tooltip（桌機 hover，行動端 tap） ── */
+    .gauge-cell {
+      position: relative;
+      cursor: help;
+    }
+    .gauge-tooltip {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      background: rgba(10, 12, 26, 0.97);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 10px;
+      line-height: 1.7;
+      color: #c7b89a;
+      font-family: 'Noto Serif TC', serif;
+      letter-spacing: 0.05em;
+      pointer-events: none;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      white-space: normal;
+      text-align: center;
+      z-index: 200;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+    }
+    /* 小三角 */
+    .gauge-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: rgba(251, 191, 36, 0.25);
+    }
+    .gauge-cell:hover .gauge-tooltip,
+    .gauge-cell.tip-open .gauge-tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* ── V1：三層鏡頭金屬質感 ── */
+    .camera-lens-outer {
+      background: radial-gradient(circle at 38% 32%,
+        #2a2e42 0%,
+        #0d0f1a 45%,
+        #050608 100%
+      );
+      box-shadow:
+        0 0 0 3px rgba(251, 191, 36, 0.18),
+        0 0 0 6px rgba(0, 0, 0, 0.85),
+        0 0 0 8px rgba(180, 160, 90, 0.10),
+        inset 0 2px 6px rgba(255, 255, 255, 0.06),
+        inset 0 -3px 8px rgba(0, 0, 0, 0.9),
+        0 12px 40px rgba(0, 0, 0, 0.8);
+    }
+    .camera-lens-middle {
+      background: radial-gradient(circle at 42% 36%,
+        #1a1f35 0%,
+        #080a14 55%,
+        #020307 100%
+      );
+      box-shadow:
+        inset 0 3px 10px rgba(255, 255, 255, 0.07),
+        inset 0 -4px 12px rgba(0, 0, 0, 0.95),
+        inset 2px 0 8px rgba(99, 102, 241, 0.06);
+      border: 1px solid rgba(251, 191, 36, 0.08);
+    }
+    .camera-lens-inner {
+      background: radial-gradient(circle at 35% 28%,
+        #1b2240 0%,
+        #06080f 40%,
+        #010204 100%
+      );
+      box-shadow:
+        inset 0 0 30px rgba(0, 0, 0, 0.98),
+        inset 0 4px 16px rgba(99, 102, 241, 0.08),
+        inset -2px -2px 10px rgba(124, 58, 237, 0.05);
+    }
+    /* 鏡頭鍍膜藍紫反射弧光 */
+    .camera-lens-inner::before {
+      content: '';
+      position: absolute;
+      top: 8%;
+      left: 12%;
+      width: 38%;
+      height: 22%;
+      background: linear-gradient(135deg,
+        rgba(165, 180, 252, 0.18) 0%,
+        rgba(139, 92, 246, 0.08) 50%,
+        transparent 100%
+      );
+      border-radius: 50%;
+      filter: blur(6px);
+      pointer-events: none;
+    }
+
+    /* ── V2：result 進場動畫（方案 A，左右欄同時 fadeInUp） ── */
+    @keyframes result-fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(22px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .result-enter {
+      animation: result-fade-in-up 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* ── v8.8 G1：拍立得留白區手寫感日期落款 ── */
+    .polaroid-datestamp {
+      position: absolute;
+      right: 12px;
+      bottom: 6px;
+      font-family: 'Noto Serif TC', serif;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: #8a7a5c;
+      transform: rotate(-1.2deg);
+      opacity: 0.85;
+    }
+
+    /* ── v8.8 A2：尊重系統「減少動態」偏好，關閉閃爍並縮短顯影 ── */
+    @media (prefers-reduced-motion: reduce) {
+      .superposition-text { animation: none !important; text-shadow: none; }
+      .guide-hint { animation: none !important; opacity: 0.7; }
+      .drawing-hint { animation: none !important; opacity: 1; }
+      .developing-photo { animation-duration: 1.2s !important; }
+      .animate-print { animation-duration: 0.9s !important; }
+      .result-enter { animation-duration: 0.01s !important; }
+      .toast-banner { animation-duration: 0.01s !important; }
+      .animate-flash { animation: none !important; opacity: 0 !important; }
+      .poem-reveal { animation-duration: 0.01s !important; animation-delay: 0s !important; opacity: 1 !important; }
+      .title-shimmer::after { animation: none !important; display: none; }
+      .advice-reveal { animation-duration: 0.01s !important; }
+      #fluid-canvas { opacity: 0.25; }
+    }
+
+    /* ── v9.6 B1：念珠導航（右側 13 顆圓點） ── */
+    .bead-nav {
+      position: fixed;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      z-index: 55;
+      pointer-events: auto;
+    }
+    .bead {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(55, 55, 65, 0.55);
+      border: 1px solid rgba(100, 100, 110, 0.25);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: default;
+      position: relative;
+    }
+    .bead-active {
+      background: rgba(245, 158, 11, 0.85);
+      border-color: rgba(251, 191, 36, 0.55);
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.45), 0 0 2px rgba(251, 191, 36, 0.3);
+    }
+    .bead-current {
+      background: rgba(251, 191, 36, 1);
+      border-color: rgba(251, 191, 36, 0.9);
+      box-shadow: 0 0 12px rgba(251, 191, 36, 0.7), 0 0 4px rgba(245, 158, 11, 0.5);
+      transform: scale(1.35);
+    }
+    /* 念珠串線 */
+    .bead-nav::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(180, 160, 90, 0.12) 8%,
+        rgba(180, 160, 90, 0.18) 50%,
+        rgba(180, 160, 90, 0.12) 92%,
+        transparent 100%
+      );
+      z-index: -1;
+      pointer-events: none;
+    }
+    /* 行動端縮小念珠 */
+    @media (max-width: 768px) {
+      .bead-nav {
+        right: 8px;
+        gap: 7px;
+      }
+      .bead {
+        width: 8px;
+        height: 8px;
+      }
+    }
+    @media (max-width: 480px) {
+      .bead-nav {
+        right: 5px;
+        gap: 6px;
+      }
+      .bead {
+        width: 7px;
+        height: 7px;
+      }
+    }
+    /* 減少動態偏好時，念珠不做 scale 動畫 */
+    @media (prefers-reduced-motion: reduce) {
+      .bead { transition: background 0.01s, border-color 0.01s; }
+      .bead-current { transform: scale(1.2); }
+    }
+
+    /* ── T2-1：聖號金光揭示動畫 ── */
+    @keyframes gold-shimmer-sweep {
+      0%   { left: -100%; }
+      100% { left: 200%; }
+    }
+    .title-shimmer {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+    .title-shimmer::after {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: -100%;
+      width: 70%;
+      height: 120%;
+      background: linear-gradient(90deg, transparent 0%, rgba(251,191,36,0.22) 35%, rgba(255,255,255,0.1) 50%, rgba(251,191,36,0.22) 65%, transparent 100%);
+      animation: gold-shimmer-sweep 1.5s ease-in-out 0.9s 1 forwards;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── T2-2：籤詩捲軸漸顯 ── */
+    @keyframes poem-reveal {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .poem-reveal {
+      opacity: 0;
+      animation: poem-reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+    }
+
+    /* ── T1-2：解曰區漸顯動畫 ── */
+    @keyframes advice-reveal {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .advice-reveal {
+      animation: advice-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* ── V5：儀表板在 480px 以下切換為兩行兩欄 ── */
+    @media (max-width: 480px) {
+      .gauge-dashboard {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem !important;
+      }
+      .gauge-dashboard > div {
+        width: auto !important;
+        border-right: none !important;
+        border-bottom: 0.5px solid rgba(30, 41, 59, 0.6);
+        padding: 0.5rem 0.75rem !important;
+      }
+      .gauge-dashboard > div:nth-child(odd) {
+        border-right: 0.5px solid rgba(30, 41, 59, 0.6) !important;
+      }
+      .gauge-dashboard > div:nth-child(3),
+      .gauge-dashboard > div:nth-child(4) {
+        border-bottom: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    /* STREAMING_CHUNK:Initializing local IndexedDB storage... */
+    /** @jsx React.createElement */
+    /** @jsxFrag React.Fragment */
+    const { useState, useRef, useEffect, useCallback } = React;
+
+    // --- IndexedDB 地端安全圖片資料庫邏輯 ---
+    const DB_NAME = 'GuanyinOracleDB';
+    const STORE_NAME = 'local_images';
+
+    const initDB = () => {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME);
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    };
+
+    const saveImageToDB = async (filename, base64Data) => {
+      const db = await initDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).put(base64Data, filename);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    };
+
+    const loadAllImagesFromDB = async () => {
+      const db = await initDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const store = tx.objectStore(STORE_NAME);
+        const request = store.getAllKeys();
+        
+        request.onsuccess = () => {
+          const keys = request.result;
+          const images = {};
+          let loaded = 0;
+          if (keys.length === 0) return resolve(images);
+          
+          keys.forEach(key => {
+            const getReq = store.get(key);
+            getReq.onsuccess = () => {
+              images[key] = getReq.result;
+              loaded++;
+              if (loaded === keys.length) resolve(images);
+            };
+          });
+        };
+        request.onerror = () => reject(request.error);
+      });
+    };
+
+    const clearImagesFromDB = async () => {
+      const db = await initDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).clear();
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    };
+
+    /* STREAMING_CHUNK:Configuring SVG icons and card data... */
+    // 高質感 SVG 圖示
+    const Icons = {
+      Close: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h18v18H3zM15 9l-6 6M9 9l6 6"/></svg>,
+      Refresh: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>,
+      Download: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+      Loading: () => <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>,
+      Settings: () => <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>,
+      Trash: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>,
+      Image: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>,
+      ShutterCam: () => <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="url(#goldGradient)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><defs><linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#fbbf24"/><stop offset="100%" stopColor="#d97706"/></linearGradient></defs><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>,
+      /* v8.8 A1：音效開與關圖示 */
+      SoundOn: () => <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>,
+      SoundOff: () => <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>,
+      /* v8.8 T4：分享圖示 */
+      Share: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    };
+    
+    // 十三觀音籤詩
+    // v8.8 G3：各籤增補 advice（行動建議）與 blessing（迴向語）兩欄位
+    // v9.0：新增第十一至十三籤（魚籃觀音、楊柳觀音、水月觀音）
+    // v9.1：依《觀音解籤人》文檔全面更新十三籤 text、advice、blessing 三欄位
+    const guanyinCards = [
+      { id: 1, name: "第一籤", title: "南海古佛", image: "南海古佛.png", text: "做一位世間無常的洞察者，在亂世的動盪與篩選中，學會安住內心、守住堅定信念。看見人生的無常與渺小，在無常裡點心燈，從重重試煉中獲得生命真正的重生。", advice: "每日留十分鐘放下手機獨處，把這段時間完整還給內修與自省，練習在動盪中安住，在無常中洞察。", blessing: "願無常為師，信念堅守，心燈不滅，照破幽冥。" },
+      { id: 2, name: "第二籤", title: "觀音菩薩", image: "觀音菩薩.png", text: "透過深度的自我覺察，如實觀照內在的三毒六慾與情緒慣性。借境修心，以「反省、懺悔、轉善念」打破既有的思維迴路，識透人生劇本，成為自己命運的劇作家，改寫關係的劇情。", advice: "今晚靜下心來，寫下一件反覆困擾你的關係情節，試著從對方的角度重新閱讀這個故事，覺察自己的慣性反應。", blessing: "願觀照深入，識透劇本，借境修心，化煩惱為菩提。" },
+      { id: 3, name: "第三籤", title: "觀音大士", image: "觀音大士.png", text: "化身靈魂急診室的療癒者，明白一切關係皆是因緣合和而非偶然，家庭就是修行開始的地方。不以天職為由忽略身邊的人，學習以境為師、以考代劫，在家庭這座第一道場裡，攜手同行，穩紮穩打地承擔責任。", advice: "本週安排一次不談工作的家人共處時光，放下手機，專心傾聽家人此刻的心事，把家當成靈魂的急診室，先療癒最近的關係。", blessing: "願以境為師，闔家同心，攜手承擔，因緣圓滿。" },
+      { id: 4, name: "第四籤", title: "魚籃觀音", image: "魚籃觀音.png", text: "在欲望的海洋中，以智慧為籃、以理性為繩。籃有邊界，提醒我們面對欲望須保持節制與清醒的判斷；緊密編織的籃身，寓意婚姻與人際中最美的姿態，是彼此相連、相互扶持。", advice: "今日面對欲望與人際摩擦時，先想像手中的魚籃：籃有邊界，心亦有度。問自己此刻的渴求，是真實的需要，還是慣性的追逐？", blessing: "願智慧如籃，欲有邊界，情有扶持，人我兩安。" },
+      { id: 5, name: "第五籤", title: "白衣觀音", image: "白衣觀音.png", text: "打造生命的諾亞方舟，將物理空間昇華至心靈方寸之地。劫難中以法船載人渡過苦海，若無實體佛堂，便點亮心燈，每日三省，讓內心成為最強的免疫系統。家，是有光、有依靠的方舟。", advice: "與家人約定每日一小段共同安靜的時光，一起點燈，一起沉澱，把家打造成渡過苦海的法船。", blessing: "願家有常光，人有依靠，心為方舟，燈燈相續。" },
+      { id: 6, name: "第六籤", title: "楊柳觀音", image: "楊柳觀音.png", text: "如同善調琴弦的調音師，在人生的急與緩之間，展現柔軟如水的處世之道。過急則弦斷，過緩則音沉，唯有不急不緩，方能奏出微妙雅音。", advice: "當事情令你焦躁時，試著放慢一個節拍再回應。如同調弦，找到不急不緩的那個音準，讓柔軟成為力量。", blessing: "願柔以處世，不急不緩，弦正音雅，從容自在。" },
+      { id: 7, name: "第七籤", title: "灑水觀音", image: "灑水觀音.png", text: "把道理活成真理的人生實踐家。改變出現在行動裡，而非發生在理解裡。灑水蘊含淨化與滋潤，在成為他人的救火員之前，切莫忘記澆熄自身的業火。助人者的覺醒在於接納「我也需要被安放」，專心陪伴他人之餘，別忘了溫柔照顧自己。", advice: "今天為別人做一件事之前，先為自己做一件安頓身心的小事。記住：道理是地圖，真理是腳下踩的泥濘，唯有親自走過才算數。", blessing: "願道理化行動，業火自熄，助人亦自安，一屋之淨映照一心之淨。" },
+      { id: 8, name: "第八籤", title: "持經觀音", image: "持經觀音.png", text: "化身宇宙能量磁場的調頻師，在喧囂紛擾的塵世中穩住內在磁場。每一句話出口之前，先問自己：這是在救火，還是添油？專注傾聽，語出善念，讓誦經的專注延伸到日常說話裡，建構出平靜的高頻能量場。", advice: "今日發言與轉傳訊息前，先默問一次「這是救火還是添油」，一日三省其口，練習做自己能量場的調頻師。", blessing: "願口出蓮花，內在磁場穩定，言語成經，聞者心安。" },
+      { id: 9, name: "第九籤", title: "施藥觀音", image: "施藥觀音.png", text: "打造生命的急救包，啟動心靈的免疫系統。萬病起於心，承認自己是病人，也學習當自己的醫生，以守玄關、持真言、勤禮拜的日常功課，將心校正、回歸圓點，體悟身心靈三位一體。", advice: "每日留一段固定的靜坐時光，守玄收心，把這份功課當作自己的心靈健保卡，日日使用，讓功課成為日常良藥。", blessing: "願身心安頓，萬病歸心而癒，自療療人，法藥常施。" },
+      { id: 10, name: "第十籤", title: "延命觀音", image: "延命觀音.png", text: "做餐桌上和平協議的簽署者，以茹素為實踐的第一步。看見每一口「享受」背後的代價與業力，透過懺悔與慈悲淨化身心，破除過往業力，延年益壽，進而延續慧命。", advice: "本週擇兩日清簡茹素，在餐桌上簽下與自己的和平協議，記下省下的每一分心念與開銷，觀察欲望的來去。", blessing: "願減一分口腹，增一分慈悲，破除業力，慧命延續。" },
+      { id: 11, name: "第十一籤", title: "普悲觀音", image: "普悲觀音.png", text: "從個人成功的「高度」邁向公眾成功的「溫度」。真正的成就不限於個人的偉業，而是能重整信念，建立好的人際關係，與人合作創造更大的生命價值，以每日一小步，走出一條菩薩版的人生路線。", advice: "為自己立一個三十日的微願：每日一小步，從獨善其身走向與人合作，記錄每一次合作中感受到的溫度，行過即是路。", blessing: "願高度化溫度，信願行具足，利己利人，道業日增。" },   
+      { id: 12, name: "第十二籤", title: "不二觀音", image: "不二觀音.png", text: "做苦海亂世中的航海羅盤，超越世俗的對立與焦慮。不再追逐「快速致富」「靈驗偏財」的幻象，而是握緊天人對接的金線，踏實調整自己的心、行與業，在無常中回歸靈魂本源。", advice: "再遇「快速致富」的訊息時，先深呼吸一次，回頭記一筆踏實的收支帳，讓內心的羅盤指向真正的方向。", blessing: "願心不逐利，行不離道，握緊金線，回歸本源。" },
+      { id: 13, name: "第十三籤", title: "水月觀音", image: "水月觀音.png", text: "以幻修幻，在塵世中觀照有為法的如夢如幻、如泡如影。不在幻影裡尋找永恆，而是透過內觀，覺察世界的夢、幻、泡、影，隨一顆顆泡影破滅，一步步從世界踏階「尋光」而上，邁向法界。", advice: "睡前靜坐五分鐘，觀想今日經歷如水中月影，看見它，不執取它，練習在無常中安住。", blessing: "願觀幻成智，泡影化光，步步踏階，法界在望。" }
+    ];
+
+    // v9.6：固定抽籤順序（依序不重複，走完 13 尊後循環）
+    const DRAW_ORDER = [
+      "南海古佛", "觀音菩薩", "觀音大士", "魚籃觀音", "白衣觀音",
+      "楊柳觀音", "灑水觀音", "持經觀音", "施藥觀音", "延命觀音",
+      "普悲觀音", "不二觀音", "水月觀音"
+    ];
+
+    // v8.8 G1：干支紀年＋西元日期落款（拍立得手寫日期傳統）
+    const HEAVENLY_STEMS = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
+    const EARTHLY_BRANCHES = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+    const formatOracleDate = (d = new Date()) => {
+      const y = d.getFullYear();
+      const ganzhi = HEAVENLY_STEMS[(y - 4) % 10] + EARTHLY_BRANCHES[(y - 4) % 12];
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      return ganzhi + "年・" + y + "・" + mm + "・" + dd;
+    };
+
+    // --- Web Audio API 多維意識共振音頻合成器 ---
+    // P3：改為接收外部 audioCtx（App 層單例），不在此處 new AudioContext
+    // 避免每次按快門都建立新 Context，防止 Chrome 超過 6 個發出警告與 memory leak
+    const playCosmicChime = (audioCtx, dynamicHz = 528) => {
+      try {
+        if (!audioCtx) return;
+        // AudioContext 可能因瀏覽器自動暫停政策進入 suspended 狀態，需先恢復
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const oscRoot = audioCtx.createOscillator();
+        const gainRoot = audioCtx.createGain();
+        oscRoot.type = 'sine';
+        oscRoot.frequency.setValueAtTime(136.1, audioCtx.currentTime);
+        
+        // 頻率受真實環境物理熵值微調
+        const oscMiracle = audioCtx.createOscillator();
+        const gainMiracle = audioCtx.createGain();
+        oscMiracle.type = 'sine';
+        oscMiracle.frequency.setValueAtTime(dynamicHz, audioCtx.currentTime);
+
+        const oscHarmonic = audioCtx.createOscillator();
+        const gainHarmonic = audioCtx.createGain();
+        oscHarmonic.type = 'triangle';
+        oscHarmonic.frequency.setValueAtTime(dynamicHz * 2, audioCtx.currentTime);
+
+        const duration = 4.0;
+        const now = audioCtx.currentTime;
+        
+        gainRoot.gain.setValueAtTime(0, now);
+        gainRoot.gain.linearRampToValueAtTime(0.25, now + 0.08);
+        gainRoot.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        gainMiracle.gain.setValueAtTime(0, now);
+        gainMiracle.gain.linearRampToValueAtTime(0.35, now + 0.05);
+        gainMiracle.gain.exponentialRampToValueAtTime(0.001, now + duration - 0.5);
+
+        gainHarmonic.gain.setValueAtTime(0, now);
+        gainHarmonic.gain.linearRampToValueAtTime(0.12, now + 0.02);
+        gainHarmonic.gain.exponentialRampToValueAtTime(0.001, now + duration - 1.5);
+
+        oscRoot.connect(gainRoot).connect(audioCtx.destination);
+        oscMiracle.connect(gainMiracle).connect(audioCtx.destination);
+        oscHarmonic.connect(gainHarmonic).connect(audioCtx.destination);
+
+        oscRoot.start(now); oscMiracle.start(now); oscHarmonic.start(now);
+        oscRoot.stop(now + duration); oscMiracle.stop(now + duration); oscHarmonic.stop(now + duration);
+
+      } catch (err) {
+        console.warn("音頻上下文受限:", err);
+      }
+    };
+
+    // ── v9.9 新增：合影舞台掃碼帶籤設定 ──
+    // QR 內容＝大螢幕合影舞台網址＋gy 參數。大螢幕端掃描「只讀取 gy 參數」，
+    // 故此網址之後可自由改成你實際發佈的舞台網址（例如 GitHub Pages），不影響掃碼判讀。
+    const STAGE_BASE_URL = "https://yiansujiang.github.io/guanyin-stage/";
+
+    /* STREAMING_CHUNK:Setting up React state and event handlers... */
+    const App = () => {
+      const [status, setStatus] = useState('idle');
+      const [currentCard, setCurrentCard] = useState(null);
+      const [isDownloading, setIsDownloading] = useState(false);
+      const [isFlashing, setIsFlashing] = useState(false); 
+      const [shutterPressed, setShutterPressed] = useState(false);
+      // F4：追蹤顯影動畫是否完成（premium-develop 4.8s），動畫跑完前鎖定下載
+      const [isPhotoReady, setIsPhotoReady] = useState(false);
+      // T1-1：drawing 三段敘事階段（0=未開始, 1=虔心祈願, 2=觀音垂聽, 3=菩薩顯化）
+      const [drawingPhase, setDrawingPhase] = useState(0);
+      // T1-3：重新求籤確認面板
+      const [showResetConfirm, setShowResetConfirm] = useState(false);
+      
+      const [dbImages, setDbImages] = useState({});
+      const [showGalleryModal, setShowGalleryModal] = useState(false);
+
+      // U4：首次進入 Toast 顯示狀態（'visible' | 'hiding' | 'hidden'）
+      const [toastState, setToastState] = useState('hidden');
+      const toastTimerRef = useRef(null);
+
+      // U5：行動端 tooltip 目前展開的 gauge 欄位 id
+      const [openTip, setOpenTip] = useState(null);
+
+      // v9.6：固定順序抽籤計數器（ref 不觸發 re-render，跨 reset 保留）
+      const drawCountRef = useRef(0);
+      // v9.6：念珠導航顯示用（已抽幾尊，驅動 re-render 更新念珠亮燈）
+      const [drawnCount, setDrawnCount] = useState(0);
+
+      // v8.8 G1：本次求籤的日期落款（干支＋西元）
+      const [drawDate, setDrawDate] = useState("");
+      // v8.8 G2：默禱指引摺疊開關
+      // T1-4：首次進入預設展開，看過後記錄至 localStorage 並收合
+      const [showPrayer, setShowPrayer] = useState(() => {
+        try { return !localStorage.getItem("guanyin_prayer_seen"); } catch (e) { return true; }
+      });
+      // v8.8 G3：解曰摺疊開關
+      const [showAdvice, setShowAdvice] = useState(false);
+      // v8.8 A1：音效開關（localStorage 持久化，讀取失敗時預設有聲）
+      const [isMuted, setIsMuted] = useState(() => {
+        try { return localStorage.getItem("guanyin_oracle_muted") === "1"; } catch (e) { return false; }
+      });
+      // v8.8 A2：偵測系統「減少動態」偏好（粒子場改為靜態淡點）
+      const prefersReducedMotion = useRef(
+        typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      );
+
+      // v8.8 A1：切換靜音並持久化
+      const toggleMute = () => {
+        setIsMuted(prev => {
+          const next = !prev;
+          try { localStorage.setItem("guanyin_oracle_muted", next ? "1" : "0"); } catch (e) {}
+          return next;
+        });
+      };
+
+      // 動態 3D 滑鼠體感座標
+      const [rotateX, setRotateX] = useState(0);
+      const [rotateY, setRotateY] = useState(0);
+
+      // 實體環境熵池 (Physical Entropy Pool)
+      const entropyPoolRef = useRef([]);
+
+      // 疊加態視覺文字 (Superposition Text)
+      const [superpositionTarget, setSuperpositionTarget] = useState("");
+      
+      // T1-2：解曰自動展開計時器（使用者手動操作時取消）
+      const adviceTimerRef = useRef(null);
+
+      const captureRef = useRef(null);
+      const qrRef = useRef(null); // v9.9：合影掃碼 QR 容器
+      const fileInputRef = useRef(null);
+      const canvasRef = useRef(null);
+      const requestRef = useRef(null);
+      const particlesRef = useRef([]);
+      const lastMouseRef = useRef({ x: 0, y: 0, time: Date.now() });
+      const lastTouchRef = useRef({ x: 0, y: 0, time: Date.now() });
+      // F2：偵測觸控裝置，跳過 3D 偏擺避免版面爆開
+      const isTouchDevice = useRef(
+        typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+      );
+
+      // P3：AudioContext 單例，mount 時建立，unmount 時 close，避免累積多個 Context
+      const audioCtxRef = useRef(null);
+
+      // P2：以 ref 儲存儀表板三個數值，搭配 rAF 批次更新 DOM，完全繞過 React re-render
+      const gaugeRef = useRef({ coherence: 100.0, entropy: 0.001, stringHz: 528.0 });
+      const gaugeRafRef = useRef(null);       // rAF handle，避免重複排程
+      const gaugeDomRef = useRef({});         // 各 span 的 DOM ref（coherence、entropy、hz）
+      // P2：rotateX/Y 維持 useState（需驅動 JSX transform），但節流至 16ms 一次
+      const rotateThrottleRef = useRef(0);
+
+      const isLocalFile = window.location.protocol === 'file:';
+
+      useEffect(() => { loadImages(); }, []);
+
+      // v9.9：求得籤後產生「上台合影」QR（內容＝STAGE_BASE_URL?gy=籤號）。
+      // 此 QR 只畫在右側經卷面板，不在 captureRef 截圖範圍內，故下載的拍立得影像維持原樣不變。
+      useEffect(() => {
+        if (status !== 'result' || !currentCard || !qrRef.current) return;
+        const box = qrRef.current;
+        box.innerHTML = '';
+        const payload = STAGE_BASE_URL + '?gy=' + currentCard.id + '&t=' + currentCard.id + '&ts=' + Date.now();
+        try {
+          if (window.QRCode) {
+            new window.QRCode(box, {
+              text: payload, width: 96, height: 96,
+              colorDark: '#1c1917', colorLight: '#ffffff',
+              correctLevel: window.QRCode.CorrectLevel.M
+            });
+          } else {
+            box.innerHTML = '<div style="font-size:12px;color:#1c1917;text-align:center;line-height:1.35;font-weight:700;">' + currentCard.name + '<br/><span style="font-weight:400;font-size:10px;">（請口報籤號手動選）</span></div>';
+          }
+        } catch (e) { /* QR 產生失敗不影響其他功能 */ }
+      }, [status, currentCard]);
+
+      // P3：mount 時建立單一 AudioContext，unmount 時 close 釋放資源
+      // 使用者互動前 AudioContext 為 suspended，playCosmicChime 內部會自動 resume
+      useEffect(() => {
+        const ACtx = window.AudioContext || window.webkitAudioContext;
+        if (ACtx) audioCtxRef.current = new ACtx();
+        return () => {
+          if (audioCtxRef.current) {
+            audioCtxRef.current.close();
+            audioCtxRef.current = null;
+          }
+        };
+      }, []);
+
+      // P2：rAF 批次刷新儀表板 DOM（將 gaugeRef 數值寫入各 span 的 textContent）
+      // 每幀最多執行一次，完全繞過 React re-render，解決高頻 setState 問題
+      const scheduleGaugeDomUpdate = useCallback(() => {
+        if (gaugeRafRef.current) return; // 已有排程中的 rAF，不重複
+        gaugeRafRef.current = requestAnimationFrame(() => {
+          gaugeRafRef.current = null;
+          const { coherence: c, entropy: e, stringHz: hz } = gaugeRef.current;
+          if (gaugeDomRef.current.coherence) gaugeDomRef.current.coherence.textContent = c.toFixed(1) + ' %';
+          if (gaugeDomRef.current.entropy)   gaugeDomRef.current.entropy.textContent   = e.toFixed(3) + ' H(s)';
+          if (gaugeDomRef.current.hz)        gaugeDomRef.current.hz.textContent        = hz.toFixed(1) + ' Hz';
+        });
+      }, []);
+
+      // U4：圖庫載入完成後，若 IndexedDB 為空則顯示引導 Toast
+      useEffect(() => {
+        if (Object.keys(dbImages).length === 0) {
+          // 延遲 1.5 秒，避免與頁面初始動畫衝突
+          const delay = setTimeout(() => {
+            setToastState('visible');
+            // 5 秒後啟動淡出動畫
+            toastTimerRef.current = setTimeout(() => {
+              setToastState('hiding');
+              // 動畫結束後移除 DOM
+              setTimeout(() => setToastState('hidden'), 450);
+            }, 5000);
+          }, 1500);
+          return () => { clearTimeout(delay); clearTimeout(toastTimerRef.current); };
+        }
+      }, [dbImages]);
+
+      // T1-2：顯影完成後延遲 2 秒自動展開解曰區
+      useEffect(() => {
+        if (!isPhotoReady) return;
+        adviceTimerRef.current = setTimeout(() => setShowAdvice(true), 2000);
+        return () => { if (adviceTimerRef.current) clearTimeout(adviceTimerRef.current); };
+      }, [isPhotoReady]);
+
+      // U5：點擊其他地方關閉 tooltip
+      useEffect(() => {
+        if (!openTip) return;
+        const close = () => setOpenTip(null);
+        document.addEventListener('touchstart', close, { passive: true });
+        return () => document.removeEventListener('touchstart', close);
+      }, [openTip]);
+
+      // --- 量子漲落粒子場動態渲染引擎 ---
+      // P1：新增 statusRef，讓 render loop 讀取最新 status 而不依賴 closure 捕獲
+      // 如此可將粒子初始化與行為邏輯完全分離，避免 status 切換時觸發粒子重建閃爍
+      const statusRef = useRef(status);
+
+      // P1（行為同步）：status 變更時只更新 ref，不重建粒子、不重啟 rAF
+      useEffect(() => {
+        statusRef.current = status;
+      }, [status]);
+
+      // P1（初始化）：只跑一次，建立 75 顆粒子並啟動 render loop
+      // 依賴陣列為 []，status 切換完全不觸發此 effect
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let width = (canvas.width = window.innerWidth);
+        let height = (canvas.height = window.innerHeight);
+
+        const handleResize = () => {
+          if (canvas) {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+          }
+        };
+        window.addEventListener('resize', handleResize);
+
+        // 粒子初始化：只在 mount 時執行一次，不因 status 重建
+        // v8.8 A2：減少動態偏好時 motionScale 為 0，粒子降為原地靜態淡點
+        const motionScale = prefersReducedMotion.current ? 0 : 1;
+        const particleCount = 75;
+        particlesRef.current = [];
+        for (let i = 0; i < particleCount; i++) {
+          particlesRef.current.push({
+            x: Math.random() * width, y: Math.random() * height,
+            radius: Math.random() * 1.5 + 0.5, baseAlpha: Math.random() * 0.4 + 0.1, alpha: 0,
+            speedX: (Math.random() - 0.5) * 0.4 * motionScale, speedY: (Math.random() - 0.5) * 0.4 * motionScale,
+            angle: Math.random() * Math.PI * 2, spinSpeed: (Math.random() - 0.5) * 0.02 * motionScale,
+            colorPhase: Math.random() * 100
+          });
+        }
+
+        // T3-3：時辰感知粒子色溫（晨間偏暖橙、暮時偏紫靛、其餘維持原金藍）
+        const currentHour = new Date().getHours();
+        let pGold, pCool;
+        if (currentHour >= 5 && currentHour < 8) {
+          pGold = [255, 185, 60]; pCool = [210, 150, 85];
+        } else if (currentHour >= 18 && currentHour < 21) {
+          pGold = [210, 145, 225]; pCool = [135, 95, 215];
+        } else {
+          pGold = [245, 158, 11]; pCool = [99, 102, 241];
+        }
+
+        let mouseX = width / 2;
+        let mouseY = height / 2;
+        const trackMouse = (e) => { mouseX = e.clientX; mouseY = e.clientY; };
+        window.addEventListener('mousemove', trackMouse);
+
+        const render = () => {
+          ctx.clearRect(0, 0, width, height);
+          ctx.strokeStyle = 'rgba(217, 119, 6, 0.02)';
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.arc(width / 2, height / 2, Math.min(width, height) * 0.35, 0, Math.PI * 2);
+          ctx.stroke();
+
+          const particles = particlesRef.current;
+          // P1：改讀 statusRef.current，而非 closure 捕獲的 status
+          // 這樣 status 切換時 render loop 仍讀到最新值，且不觸發 effect 重跑
+          const currentStatus = statusRef.current;
+
+          particles.forEach((p) => {
+            p.angle += p.spinSpeed;
+            p.x += p.speedX + Math.cos(p.angle) * 0.15;
+            p.y += p.speedY + Math.sin(p.angle) * 0.15;
+
+            if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+            if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+
+            if (currentStatus === 'drawing') {
+              // v8.8 A2：減少動態偏好時不做向心聚攏，只保留亮度提升
+              if (!prefersReducedMotion.current) {
+                const targetX = width / 2; const targetY = height / 2;
+                p.x += (targetX - p.x) * 0.08; p.y += (targetY - p.y) * 0.08;
+              }
+              p.alpha = Math.min(1, p.alpha + 0.05);
+            } else {
+              p.alpha = p.baseAlpha + Math.sin(Date.now() * 0.001 + p.colorPhase) * 0.08;
+              const dx = mouseX - p.x; const dy = mouseY - p.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+              // v8.8 A2：減少動態偏好時不做滑鼠吸引位移
+              if (dist < 180 && !prefersReducedMotion.current) { p.x += (dx / dist) * 0.4; p.y += (dy / dist) * 0.4; }
+            }
+
+            const isGold = p.colorPhase % 2 > 0.8;
+            ctx.fillStyle = isGold ? `rgba(${pGold[0]}, ${pGold[1]}, ${pGold[2]}, ${p.alpha * 1.5})` : `rgba(${pCool[0]}, ${pCool[1]}, ${pCool[2]}, ${p.alpha * 1.2})`;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
+
+            if (p.radius > 1.6 && currentStatus !== 'drawing') {
+              ctx.strokeStyle = `rgba(217, 119, 6, ${p.alpha * 0.12})`;
+              ctx.beginPath(); ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p.x + Math.cos(p.angle) * 15, p.y + Math.sin(p.angle) * 15); ctx.stroke();
+            }
+          });
+          requestRef.current = requestAnimationFrame(render);
+        };
+        render();
+
+        return () => {
+          window.removeEventListener('resize', handleResize);
+          window.removeEventListener('mousemove', trackMouse);
+          cancelAnimationFrame(requestRef.current);
+        };
+      }, []); // P1：依賴陣列為空，mount 一次，status 切換不重跑
+
+      // --- T1-1：drawing 三段敘事階段推進 ---
+      useEffect(() => {
+        if (status !== 'drawing') { setDrawingPhase(0); return; }
+        setDrawingPhase(1);
+        const t2 = setTimeout(() => setDrawingPhase(2), 700);
+        const t3 = setTimeout(() => setDrawingPhase(3), 1400);
+        return () => { clearTimeout(t2); clearTimeout(t3); };
+      }, [status]);
+
+      // --- 疊加態 (Superposition) 輪播效應 ---
+      useEffect(() => {
+        let timer;
+        if (status === 'drawing') {
+          timer = setInterval(() => {
+            const randomIdx = Math.floor(Math.random() * guanyinCards.length);
+            setSuperpositionTarget(guanyinCards[randomIdx].title);
+          }, 80); // 80ms 快速輪播，製造疊加態塌縮前的視覺
+        } else if (status === 'result') {
+          setSuperpositionTarget(currentCard.title);
+        } else {
+          setSuperpositionTarget("觀測者待命中");
+        }
+        return () => clearInterval(timer);
+      }, [status, currentCard]);
+
+      const loadImages = async () => {
+        try {
+          const images = await loadAllImagesFromDB();
+          setDbImages(images);
+        } catch (err) { console.error("無法載入本地資料庫:", err); }
+      };
+
+      // 計算滑鼠移動產生的微體感 3D 偏擺，同時收集「物理環境熵 (Entropy)」
+      const handleMouseMove = (e) => {
+        if (status === 'drawing' || status === 'result') return;
+        
+        const now = Date.now();
+        const last = lastMouseRef.current;
+        const dt = now - last.time;
+        const dx = e.clientX - last.x;
+        const dy = e.clientY - last.y;
+        
+        // 收集物理熵值: 滑鼠位移與時間的雜湊 (Hash)
+        if (dt > 10) { 
+          const velocity = Math.sqrt(dx * dx + dy * dy) / dt;
+          entropyPoolRef.current = [...entropyPoolRef.current.slice(-19), Math.floor((velocity * now) % 9999)];
+          
+          // P2：不再呼叫 setState，改寫入 gaugeRef，再排程 rAF 批次更新 DOM
+          // 每秒 60~120 次 mousemove 只觸發最多 60 次 DOM 寫入，完全不觸發 re-render
+          gaugeRef.current = {
+            coherence: parseFloat((Math.max(12.4, 100 - velocity * 15)).toFixed(1)),
+            entropy:   parseFloat((Math.min(9.999, velocity * 2.5)).toFixed(3)),
+            stringHz:  parseFloat((528.0 + velocity * 10).toFixed(1)),
+          };
+          scheduleGaugeDomUpdate();
+
+          lastMouseRef.current = { x: e.clientX, y: e.clientY, time: now };
+        }
+
+        // F2：觸控裝置跳過 3D 偏擺，避免觸控座標未初始化造成版面爆開
+        if (isTouchDevice.current) return;
+
+        // P2：rotateX/Y 維持 useState（需驅動 JSX transform），節流至 16ms 一次
+        if (now - rotateThrottleRef.current < 16) return;
+        rotateThrottleRef.current = now;
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const mouseX = e.clientX - width / 2;
+        const mouseY = e.clientY - height / 2;
+        setRotateX(-(mouseY / height) * 16);
+        setRotateY((mouseX / width) * 16);
+      };
+
+      // 滑鼠靜止後平滑復位 (恢復波函數穩定態)
+      const handleMouseLeave = () => {
+        if (status === 'idle') {
+          // P2：同樣改寫 ref 批次更新，不觸發 re-render
+          gaugeRef.current = { coherence: 99.9, entropy: 0.001, stringHz: 528.0 };
+          scheduleGaugeDomUpdate();
+        }
+        // F2：觸控裝置本來就不設 rotateX/Y，無需復位
+        if (!isTouchDevice.current) {
+          setRotateX(0);
+          setRotateY(0);
+        }
+      };
+
+      // F1：行動端 touchmove 熵值收集（與 mousemove 邏輯對稱）
+      const handleTouchMove = (e) => {
+        if (status === 'drawing' || status === 'result') return;
+        if (!e.touches || e.touches.length === 0) return;
+
+        const touch = e.touches[0];
+        const now = Date.now();
+        const last = lastTouchRef.current;
+        const dt = now - last.time;
+        const dx = touch.clientX - last.x;
+        const dy = touch.clientY - last.y;
+
+        if (dt > 16) {
+          const velocity = Math.sqrt(dx * dx + dy * dy) / dt;
+          entropyPoolRef.current = [...entropyPoolRef.current.slice(-19), Math.floor((velocity * now) % 9999)];
+
+          // P2：與 mousemove 對稱，寫入 gaugeRef 批次更新，不觸發 re-render
+          gaugeRef.current = {
+            coherence: parseFloat((Math.max(12.4, 100 - velocity * 15)).toFixed(1)),
+            entropy:   parseFloat((Math.min(9.999, velocity * 2.5)).toFixed(3)),
+            stringHz:  parseFloat((528.0 + velocity * 10).toFixed(1)),
+          };
+          scheduleGaugeDomUpdate();
+
+          lastTouchRef.current = { x: touch.clientX, y: touch.clientY, time: now };
+        }
+      };
+
+      // F1：行動端 touchstart 觸發快門（單指點擊機身或鏡頭區域）
+      const handleTouchStart = (e) => {
+        if (!e.touches || e.touches.length === 0) return;
+        const touch = e.touches[0];
+        lastTouchRef.current = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+      };
+
+      // v9.6：固定順序抽籤引擎（保留 Crypto API 熵池收集供儀表板視覺使用）
+      const executeQuantumCollapse = () => {
+        // 保留 Crypto API 與熵池匯總，維持儀表板數據回饋的真實物理基礎
+        const cryptoArray = new Uint32Array(1);
+        window.crypto.getRandomValues(cryptoArray);
+        const userEntropySum = entropyPoolRef.current.reduce((a, b) => a + b, 0);
+        // 熵值仍用於音頻微調，但不影響抽籤結果
+
+        // 若已走完一輪 13 尊，重置計數器開始新循環
+        if (drawCountRef.current >= DRAW_ORDER.length) {
+          drawCountRef.current = 0;
+          setDrawnCount(0);
+        }
+
+        // 依固定順序取出本次觀音
+        const idx = drawCountRef.current;
+        const targetTitle = DRAW_ORDER[idx];
+        const card = guanyinCards.find(c => c.title === targetTitle);
+
+        // 推進計數器並更新念珠亮燈
+        drawCountRef.current = idx + 1;
+        setDrawnCount(idx + 1);
+
+        return card;
+      };
+
+      // 快門按下物理效果觸發 + 磐音共振
+      const triggerShutter = () => {
+        if (shutterPressed || status === 'drawing') return;
+        
+        // T1-4：按下快門時收合默禱指引並記錄已閱
+        if (showPrayer) {
+          setShowPrayer(false);
+          try { localStorage.setItem("guanyin_prayer_seen", "1"); } catch (e) {}
+        }
+
+        // P3：傳入 App 層單例 AudioContext，不在函式內 new
+        // P2：stringHz 改從 gaugeRef.current 讀取（已不用 useState 驅動）
+        // v8.8 A1：靜音時跳過磐音，其餘快門流程完全不變
+        if (!isMuted) playCosmicChime(audioCtxRef.current, gaugeRef.current.stringHz); 
+        
+        setShutterPressed(true);
+        // P2：瞬間塌縮儀表板數據，改寫 gaugeRef 批次更新
+        gaugeRef.current = { coherence: 0.0, entropy: 9.999, stringHz: gaugeRef.current.stringHz };
+        scheduleGaugeDomUpdate();
+        
+        setTimeout(() => {
+          setShutterPressed(false);
+          handleDraw();
+        }, 450);
+      };
+
+      const handleDraw = () => {
+        setStatus('drawing');
+        setIsPhotoReady(false); // F4：進入抽籤流程，先鎖定下載
+        setDrawDate(formatOracleDate()); // v8.8 G1：記錄本次求籤日期落款
+        setShowAdvice(false); // v8.8 G3：新一次求籤時收合解曰區
+        
+        setTimeout(() => {
+          // 在這裡執行真正的量子隨機演算法
+          const collapsedCard = executeQuantumCollapse();
+          setCurrentCard(collapsedCard);
+          
+          setStatus('result');
+          // P2：結果確立，秩序恢復，改寫 gaugeRef 批次更新
+          gaugeRef.current = { coherence: 100.0, entropy: 0.108, stringHz: 528.0 };
+          scheduleGaugeDomUpdate();
+          
+          setIsFlashing(true);
+          setTimeout(() => setIsFlashing(false), 700);
+
+          // F4：等待顯影動畫（premium-develop 4.8s）完成後再解鎖下載
+          // 緩衝 400ms 確保動畫 filter 已完全歸位，html2canvas 截到正確畫面
+          setTimeout(() => setIsPhotoReady(true), 5200);
+        }, 2200); // 延長抽籤時間以展現態疊加動畫
+      };
+
+      const reset = () => { 
+        setStatus('idle'); 
+        setCurrentCard(null); 
+        // P2：復位儀表板改寫 gaugeRef 批次更新
+        gaugeRef.current = { coherence: 99.9, entropy: 0.001, stringHz: 528.0 };
+        scheduleGaugeDomUpdate();
+        setIsPhotoReady(false); // F4：重置顯影狀態
+        setShowAdvice(false); // v8.8 G3：重置時收合解曰區
+        entropyPoolRef.current = [];
+      };
+
+      // T1-3：重新求籤確認流程
+      const handleResetRequest = () => setShowResetConfirm(true);
+      const handleResetCancel = () => setShowResetConfirm(false);
+      const handleResetConfirm = () => { setShowResetConfirm(false); reset(); };
+
+      const handleFileUpload = async (event) => {
+        const files = Array.from(event.target.files);
+        if (!files.length) return;
+
+        let importedCount = 0;
+        const newImages = { ...dbImages };
+        const unmatchedNames = []; // v8.8 T2：收集未匹配的檔名
+
+        for (const file of files) {
+          const isTargetFile = guanyinCards.some(c => c.image === file.name);
+          if (isTargetFile) {
+            try {
+              const base64 = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(file); 
+              });
+              await saveImageToDB(file.name, base64);
+              newImages[file.name] = base64;
+              importedCount++;
+            } catch (err) { console.error(`讀取 ${file.name} 失敗:`, err); }
+          } else {
+            unmatchedNames.push(file.name); // v8.8 T2
+          }
+        }
+        setDbImages(newImages);
+        // v8.8 T2：依匯入結果給出誠實回饋（授權行為修改：原訊息在零張時仍報成功，具誤導性）
+        if (importedCount === 0) {
+          const expectedNames = guanyinCards.map(c => c.image).join('、');
+          alert(`未匯入任何圖片：所選檔案的名稱皆不符。\n未匹配的檔名：${unmatchedNames.join('、')}\n請將圖片重新命名為下列其中之一再匯入：\n${expectedNames}`);
+        } else if (unmatchedNames.length > 0) {
+          alert(`成功匯入並快取 ${importedCount} 張圖片！\n另有 ${unmatchedNames.length} 個檔名未匹配而略過：${unmatchedNames.join('、')}`);
+        } else {
+          alert(`成功匯入並快取 ${importedCount} 張圖片！\n您的下載功能已可正常使用。`);
+        }
+        if (fileInputRef.current) fileInputRef.current.value = ''; 
+      };
+
+      const handleClearGallery = async () => {
+        if (window.confirm("確定要清空圖庫快取嗎？")) {
+          await clearImagesFromDB();
+          setDbImages({});
+        }
+      };
+
+      const handleDownload = async () => {
+        if (!captureRef.current || isDownloading) return;
+        try {
+          setIsDownloading(true);
+          const element = captureRef.current;
+          element.classList.add('snapshot-mode'); 
+          
+          const canvas = await html2canvas(element, {
+            scale: 2, useCORS: true, allowTaint: false, backgroundColor: '#ffffff',
+          });
+
+          element.classList.remove('snapshot-mode');
+          // v8.8 T1：改輸出 image/png，與 .png 副檔名一致（授權行為修改，原為 image/jpeg）
+          const image = canvas.toDataURL("image/png");
+          const link = document.createElement("a");
+          link.href = image;
+          link.download = `過劫_十三觀音靈籤_${currentCard.name}.png`;
+          link.click();
+        } catch (err) {
+          console.error("截圖失敗:", err);
+          alert("下載失敗！請確認您已點擊右上角「⚙️設定」並匯入本地圖庫。");
+          if (captureRef.current) captureRef.current.classList.remove('snapshot-mode');
+        } finally {
+          setIsDownloading(false);
+        }
+      };
+
+      // v8.8 T4：行動端 Web Share 分享（不支援 navigator.share 的環境不會出現此按鈕）
+      const supportsWebShare = typeof navigator !== 'undefined' && !!navigator.share;
+
+      const handleShare = async () => {
+        if (!captureRef.current || isDownloading) return;
+        try {
+          setIsDownloading(true);
+          const element = captureRef.current;
+          element.classList.add('snapshot-mode');
+          const canvas = await html2canvas(element, {
+            scale: 2, useCORS: true, allowTaint: false, backgroundColor: '#ffffff',
+          });
+          element.classList.remove('snapshot-mode');
+          const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+          const file = new File([blob], `過劫_十三觀音靈籤_${currentCard.name}.png`, { type: 'image/png' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: '過劫．十三觀音靈籤',
+              text: `觀音菩薩賜${currentCard.name}：${currentCard.title}\n「${currentCard.text.slice(0, 40)}…」`
+            });
+          } else {
+            // 降級：環境不支援檔案分享時改走既有下載路徑
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = file.name;
+            link.click();
+          }
+        } catch (err) {
+          // 使用者取消分享（AbortError）屬正常流程，不報錯
+          if (err && err.name !== 'AbortError') console.error('分享失敗:', err);
+          if (captureRef.current) captureRef.current.classList.remove('snapshot-mode');
+        } finally {
+          setIsDownloading(false);
+        }
+      };
+
+      // F4：下載需同時滿足：圖庫已快取（地端限制）且顯影動畫已完成
+      const canDownloadCurrentCard = isPhotoReady && (!isLocalFile || !!dbImages[currentCard?.image]);
+
+      /* STREAMING_CHUNK:Rendering the camera and interaction UI... */
+      return (
+        <div 
+          className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden perspective-stage select-none"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          onTouchMove={handleTouchMove}
+          onTouchStart={handleTouchStart}
+        >
+          
+          <div className="film-grain"></div>
+          {/* 量子漲落 Canvas */}
+          <canvas id="fluid-canvas" ref={canvasRef}></canvas>
+          <div className={`camera-flash ${isFlashing ? 'animate-flash' : 'opacity-0'}`}></div>
+
+          {/* v9.6 B1：念珠導航（右側 13 顆圓點，已抽過亮琥珀色） */}
+          <div className="bead-nav">
+            {DRAW_ORDER.map((title, i) => {
+              const isCurrent = status === 'result' && currentCard && currentCard.title === title;
+              const isDrawn = i < drawnCount;
+              return (
+                <div
+                  key={i}
+                  className={`bead${isDrawn ? ' bead-active' : ''}${isCurrent ? ' bead-current' : ''}`}
+                  title={title}
+                />
+              );
+            })}
+          </div>
+
+          {/* v8.8 A1：磐音靜音切換鈕（齒輪左側） */}
+          <button
+            onClick={toggleMute}
+            className="absolute top-6 right-20 z-50 p-3 bg-slate-950/90 hover:bg-slate-900 text-amber-500 rounded-full shadow-[0_4px_25px_rgba(0,0,0,0.6)] backdrop-blur border border-amber-500/30 transition-all hover:scale-105"
+            title={isMuted ? '恢復磐音' : '靜音磐音'}
+          >
+            {isMuted ? <Icons.SoundOff /> : <Icons.SoundOn />}
+          </button>
+
+          {/* 地端圖庫設定按鈕 */}
+          <button 
+            onClick={() => setShowGalleryModal(true)}
+            className="absolute top-6 right-6 z-50 p-3 bg-slate-950/90 hover:bg-slate-900 text-amber-500 rounded-full shadow-[0_4px_25px_rgba(0,0,0,0.6)] backdrop-blur border border-amber-500/30 transition-all hover:scale-105"
+            title="地端圖庫設定與觀測儀調校"
+          >
+            <Icons.Settings />
+            {isLocalFile && Object.keys(dbImages).length < 13 && (
+              <span className="absolute top-0 right-0 w-3 h-3 bg-amber-500 rounded-full border border-slate-950 animate-pulse"></span>
+            )}
+          </button>
+
+          {/* U4：首次進入引導 Toast（IndexedDB 為空時顯示） */}
+          {toastState !== 'hidden' && (
+            <div className={`toast-banner fixed top-20 left-1/2 z-40 flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900/95 border border-amber-500/30 shadow-[0_8px_32px_rgba(0,0,0,0.8)] backdrop-blur-md ${toastState === 'hiding' ? 'hiding' : ''}`}
+              style={{ transform: 'translateX(-50%)', maxWidth: 'calc(100vw - 3rem)', whiteSpace: 'nowrap' }}
+            >
+              <span className="text-amber-400 text-base">🪷</span>
+              <span className="text-xs font-serif-tc text-stone-300 tracking-wide">請先匯入觀音圖庫，以啟用完整功能</span>
+              <button
+                onClick={() => {
+                  clearTimeout(toastTimerRef.current);
+                  setToastState('hiding');
+                  setTimeout(() => setToastState('hidden'), 450);
+                  setShowGalleryModal(true);
+                }}
+                className="ml-1 flex items-center gap-1 text-[10px] font-semibold text-amber-500 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-full px-2.5 py-1 transition-all"
+              >
+                <Icons.Settings /> 前往設定
+              </button>
+            </div>
+          )}
+
+          <div className="max-w-6xl w-full z-10 flex flex-col items-center">
+            
+            {/* Header */}
+            <header className="text-center mb-8">
+              <h1 className="text-4xl md:text-5xl font-serif-tc text-amber-500 font-bold mb-3 tracking-[0.25em] drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
+                過劫
+              </h1>
+              <h2 className="text-xs md:text-sm font-cinzel text-slate-400 tracking-[0.35em] font-medium opacity-85 uppercase">
+                THE THIRTEEN GUANYINS ORACLE · QUANTUM OBSERVER
+              </h2>
+            </header>
+
+            {/* 量子相干觀測儀儀表板（U5：各欄加 tooltip，桌機 hover、行動端 tap；V5：480px 以下切兩行兩欄） */}
+            <div className="gauge-dashboard mb-10 flex flex-wrap justify-center gap-6 text-center max-w-xl w-full px-6 py-3 rounded-2xl bg-slate-950/60 border border-amber-500/15 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+
+              {/* 波函數相干度 */}
+              <div
+                className={`gauge-cell flex flex-col items-center px-4 border-r border-slate-800/60 w-1/4 ${openTip === 'coherence' ? 'tip-open' : ''}`}
+                onTouchStart={(e) => { e.stopPropagation(); setOpenTip(openTip === 'coherence' ? null : 'coherence'); }}
+              >
+                <span className="text-[9px] text-slate-500 font-serif-tc tracking-widest uppercase mb-1">波函數相干度</span>
+                {/* P2：改用 DOM ref，由 rAF 批次更新 textContent，不再綁定 coherence state */}
+                <span ref={el => { gaugeDomRef.current.coherence = el; }} className="text-sm font-mono font-bold text-amber-400/90 transition-all duration-75">100.0 %</span>
+                <div className="gauge-tooltip">越靜心、越少雜念，相干度越高。求籤前放慢呼吸，讓心歸零。</div>
+              </div>
+
+              {/* 觀測態與結果 */}
+              <div
+                className={`gauge-cell flex flex-col items-center px-4 border-r border-slate-800/60 w-1/4 ${openTip === 'superpos' ? 'tip-open' : ''}`}
+                onTouchStart={(e) => { e.stopPropagation(); setOpenTip(openTip === 'superpos' ? null : 'superpos'); }}
+              >
+                <span className="text-[9px] text-slate-500 font-serif-tc tracking-widest uppercase mb-1">觀測態與結果</span>
+                {/* 觀測態文字維持 React state 驅動（疊加態輪播需要 re-render） */}
+                <span className={`text-sm font-serif-tc font-bold tracking-widest ${status === 'drawing' ? 'text-amber-500 superposition-text' : 'text-slate-200'}`}>
+                  {superpositionTarget}
+                </span>
+                <div className="gauge-tooltip">按下快門前，所有籤同時存在。觀測的那一刻，命運塌縮為唯一。</div>
+              </div>
+
+              {/* 物理環境熵值 */}
+              <div
+                className={`gauge-cell flex flex-col items-center px-4 border-r border-slate-800/60 w-1/4 ${openTip === 'entropy' ? 'tip-open' : ''}`}
+                onTouchStart={(e) => { e.stopPropagation(); setOpenTip(openTip === 'entropy' ? null : 'entropy'); }}
+              >
+                <span className="text-[9px] text-slate-500 font-serif-tc tracking-widest uppercase mb-1">物理環境熵值</span>
+                {/* P2：改用 DOM ref，由 rAF 批次更新 textContent */}
+                <span ref={el => { gaugeDomRef.current.entropy = el; }} className="text-sm font-mono font-bold text-indigo-400/90 transition-all duration-75">0.001 H(s)</span>
+                <div className="gauge-tooltip">來自你真實移動軌跡的隨機能量。每一次移動，都在為抽籤注入獨一無二的緣份。</div>
+              </div>
+
+              {/* 超弦諧振頻率 */}
+              <div
+                className={`gauge-cell flex flex-col items-center px-4 w-1/4 ${openTip === 'hz' ? 'tip-open' : ''}`}
+                onTouchStart={(e) => { e.stopPropagation(); setOpenTip(openTip === 'hz' ? null : 'hz'); }}
+              >
+                <span className="text-[9px] text-slate-500 font-serif-tc tracking-widest uppercase mb-1">超弦諧振頻率</span>
+                {/* P2：改用 DOM ref，由 rAF 批次更新 textContent */}
+                <span ref={el => { gaugeDomRef.current.hz = el; }} className="text-sm font-mono font-bold text-emerald-500/90 transition-all duration-75">528.0 Hz</span>
+                <div className="gauge-tooltip">528 Hz 為「奇蹟頻率」，對應修復與轉化。按下快門時，音缽以此頻率共鳴。</div>
+              </div>
+
+            </div>
+
+            {/* 主要互動區域 */}
+            <div className="flex flex-col items-center justify-center min-h-[500px] w-full relative">
+              
+              {/* STATUS 1 & 2: 皇家皮革金裝相機機身 與 物理出片動畫 */}
+              {(status === 'idle' || status === 'drawing') && (
+                <div 
+                  className="relative w-full max-w-md mx-auto flex justify-center transition-transform duration-300 ease-out"
+                  style={{
+                    transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+                    transformStyle: 'preserve-3d'
+                  }}
+                >
+                  
+                  {/* 同步容器：讓相紙能完美跟隨機身一起縮放與跳動，確保兩者相對位置不變 */}
+                  <div 
+                    className={`relative w-full transition-all duration-700 ${status === 'drawing' ? 'scale-[0.98] -translate-y-4' : ''}`}
+                    style={{ transformStyle: 'preserve-3d' }}
+                  >
+                    {/* 相機主體 */}
+                    <div className={`camera-luxury-body relative z-20 w-full rounded-[36px] p-8 transition-all duration-700 ${status === 'drawing' ? '' : 'hover:border-amber-500/45'}`}>
+                      
+                      {/* 機頂金色拉線裝飾 */}
+                      <div className="absolute top-0 left-12 right-12 gold-trim"></div>
+
+                      {/* 頂部：金屬快門、紅色自拍燈、與觀景窗 */}
+                      <div className="flex justify-between items-center w-full mb-10 px-2">
+                         {/* 金屬與光學閃光燈模組 */}
+                         <div className="flex items-center gap-4">
+                           <div className="w-16 h-10 bg-slate-900 rounded-lg border-2 border-slate-800 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9)] relative overflow-hidden flex items-center justify-center">
+                              <div className="w-8 h-8 rounded-full bg-[radial-gradient(circle_at_center,#fef08a_10%,#ca8a04_70%)] opacity-35"></div>
+                              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-transparent via-white/10 to-transparent"></div>
+                           </div>
+                           {/* 紅色自拍經典提示燈 */}
+                           <div className="flex flex-col items-center">
+                              <span className={`inline-block w-3 h-3 rounded-full ${status === 'idle' ? 'bg-amber-500 shadow-[0_0_8px_#f59e0b]' : 'bg-rose-600 animate-ping shadow-[0_0_12px_#e11d48]'} border border-black`}></span>
+                              <span className="text-[8px] text-slate-500 mt-1 uppercase tracking-wider font-semibold">Ready</span>
+                           </div>
+                         </div>
+
+                         {/* 金屬快門鈕 & 觀景窗 */}
+                         <div className="flex items-center gap-4">
+                            <div 
+                              onClick={triggerShutter}
+                              onTouchEnd={(e) => { e.preventDefault(); triggerShutter(); }}
+                              className={`w-10 h-3 bg-gradient-to-b from-slate-400 to-slate-700 hover:from-slate-300 hover:to-slate-600 rounded-t cursor-pointer border-t border-slate-300 shadow-[0_3px_5px_rgba(0,0,0,0.5)] transition-all transform hover:translate-y-[2px] active:translate-y-[4px]`}
+                            ></div>
+                            <div className="w-12 h-10 bg-slate-950 rounded border border-slate-900 shadow-[inset_0_5px_15px_rgba(255,255,255,0.05)] flex items-center justify-center">
+                              <div className="w-5 h-5 border border-slate-800 rounded-sm bg-gradient-to-b from-indigo-950 to-slate-900"></div>
+                            </div>
+                         </div>
+                      </div>
+
+                      {/* 核心鏡頭 (包含 12 片光圈葉片懸停收縮動畫) */}
+                      <div className="flex justify-center mb-10 relative z-10">
+                        <div 
+                          onClick={triggerShutter}
+                          onTouchEnd={(e) => { e.preventDefault(); triggerShutter(); }}
+                          className={`w-48 h-48 rounded-full camera-lens-outer p-4 cursor-pointer select-none transition-all duration-500 group hover:ring-8 hover:ring-amber-500/15 ${shutterPressed ? 'shutter-active' : ''}`}
+                        >
+                          <div className="w-full h-full rounded-full camera-lens-middle p-2.5 flex items-center justify-center relative overflow-hidden">
+                            <div className="w-full h-full rounded-full camera-lens-inner flex items-center justify-center group-hover:scale-[0.98] transition-transform duration-300">
+                              
+                              {/* 光圈葉片疊加 */}
+                              <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none opacity-40 group-hover:rotate-45 group-hover:scale-90 transition-all duration-700">
+                                {[...Array(12)].map((_, i) => (
+                                  <div 
+                                    key={i} 
+                                    className="aperture-blade" 
+                                    style={{ transform: `rotate(${i * 30}deg) skewY(25deg)` }}
+                                  ></div>
+                                ))}
+                              </div>
+
+                              {/* 中央鍍膜反射與鏡頭鏡片 */}
+                              <div className="opacity-45 group-hover:opacity-90 group-hover:scale-110 transition-all duration-500 relative z-10">
+                                <Icons.ShutterCam />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 點擊觸發機關說明 */}
+                      {status === 'idle' && (
+                        <div className="text-center pb-2">
+                          <button 
+                            onClick={triggerShutter}
+                            onTouchEnd={(e) => { e.preventDefault(); triggerShutter(); }}
+                            className="px-10 py-3 bg-gradient-to-r from-slate-950 to-slate-900 hover:from-amber-600 hover:to-amber-500 hover:text-white text-amber-500 font-serif-tc text-xs tracking-[0.25em] rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.7)] border border-amber-500/20 hover:border-transparent transition-all active:scale-95 duration-300"
+                          >
+                            觀 測 波 函 數 塌 縮
+                          </button>
+                          {/* U1：呼吸脈衝引導提示，幫助新用戶立即理解操作入口 */}
+                          <p className="guide-hint mt-3 text-[11px] font-serif-tc text-stone-500 tracking-[0.2em]">
+                            點擊鏡頭或按鈕，靜心求籤
+                          </p>
+                          {/* v8.8 G2：求籤前默禱指引（可摺疊，預設收合） */}
+                          <button
+                            onClick={() => setShowPrayer(v => !v)}
+                            className="mt-3 text-[10px] font-serif-tc text-amber-500/70 hover:text-amber-400 tracking-[0.25em] underline underline-offset-4 decoration-amber-500/30 transition-colors"
+                          >
+                            {showPrayer ? '收合默禱指引 ▴' : '默禱指引 ▾'}
+                          </button>
+                          {showPrayer && (
+                            <div className="mt-3 mx-auto max-w-[270px] text-[10px] font-serif-tc text-stone-400 leading-[2.1] tracking-[0.12em] text-left bg-slate-950/50 border border-amber-500/15 rounded-xl px-4 py-3 border-l-2 border-l-amber-500/40">
+                              <p><span className="text-amber-500/70 font-bold">一、</span>端身靜坐，深呼吸三息，放下雜念。</p>
+                              <p><span className="text-amber-500/70 font-bold">二、</span>心中默唸自己的姓名，與此刻所問之事。</p>
+                              <p><span className="text-amber-500/70 font-bold">三、</span>一事一問，心誠意定之後，再按下快門。</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* 相紙推出槽 (黃金線框微縫隙) */}
+                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-3.5 bg-black rounded-t-xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.95)] border-t border-amber-500/25 z-30"></div>
+                    </div>
+
+                    {/* 正在吐出的未顯影相紙 (高度擬真推出動畫，現在會被機身完美遮擋並從底部槽口送出) */}
+                    {status === 'drawing' && (
+                      <div className="absolute bottom-0 left-1/2 w-48 h-[220px] bg-[#fafef9] p-3 rounded-b shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-10 animate-print flex flex-col justify-end border-x border-b border-slate-300/30">
+                        <div className="w-full h-[155px] bg-[#07080d] border border-slate-950 relative overflow-hidden flex items-center justify-center">
+                           {/* 顯影前化學藥劑起伏的墨藍微光 */}
+                           <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/40 via-[#050814] to-transparent animate-pulse"></div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* T1-1：drawing 三段敘事（key 切換觸發 fade-in-up 重播） */}
+                    {status === 'drawing' && drawingPhase > 0 && (
+                      <div className="drawing-hint mt-8 text-center px-4" key={drawingPhase}>
+                        <p className="text-sm font-serif-tc text-amber-400/80 tracking-[0.25em] drop-shadow-[0_2px_8px_rgba(251,191,36,0.4)]">
+                          {drawingPhase === 1 ? '虔心祈願中…' : drawingPhase === 2 ? '觀音垂聽…' : '菩薩顯化中…'}
+                        </p>
+                        <p className="mt-1 text-[11px] font-serif-tc text-stone-500 tracking-[0.2em]">
+                          {drawingPhase === 1 ? '靜候片刻，菩薩正在聆聽' : drawingPhase === 2 ? '您的誠心已被接收' : '籤詩即將顯現'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                </div>
+              )}
+
+              {/* STREAMING_CHUNK:Rendering the result card and gallery modal... */}
+              {/* STATUS 3: 三維空間殿堂級展示版面 */}
+              {/* U3：行動端加 pb-20 避讓底部快捷 Bar，桌機 lg:pb-0 還原 */}
+              {/* V2：result-enter 觸發左右欄同時 fadeInUp 進場（方案 A） */}
+              {status === 'result' && currentCard && (
+                <div 
+                  className="result-enter flex flex-col lg:flex-row items-center lg:items-stretch justify-center gap-10 lg:gap-16 w-full max-w-[1020px] transition-transform duration-300 ease-out pb-20 lg:pb-0"
+                  style={{
+                    transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+                    transformStyle: 'preserve-3d'
+                  }}
+                >
+                  
+                  {/* 左側：極高檔實體拍立得照片卡 (帶有游標光照折射) */}
+                  <div className="relative z-20 flex-shrink-0 pt-4" style={{ transform: 'translateZ(40px)' }}>
+                    <div 
+                      ref={captureRef} 
+                      className="luxury-photo-card w-[290px] md:w-[325px] rotate-[-1.5deg]"
+                    >
+                      {/* 鏡面高光 */}
+                      <div className="photo-glare"></div>
+                      
+                      {/* 照片凹陷相紙框 */}
+                      <div className="polaroid-image-container">
+                        <img 
+                          src={dbImages[currentCard.image] || `./${currentCard.image}`} 
+                          alt={currentCard.title}
+                          crossOrigin={isLocalFile ? undefined : "anonymous"}
+                          className="polaroid-image developing-photo"
+                          onError={(e) => { 
+                            e.target.onerror = null;
+                            /* V3：蓮花輪廓暗金調 placeholder，附引導文字 */
+                            e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc0MDAnIGhlaWdodD0nNTMwJyB2aWV3Qm94PScwIDAgNDAwIDUzMCc+CiAgPHJlY3Qgd2lkdGg9JzQwMCcgaGVpZ2h0PSc1MzAnIGZpbGw9JyUyMzA1MDYwOCcvPgogIDxjaXJjbGUgY3g9JzIwMCcgY3k9JzIyNScgcj0nMTIwJyBmaWxsPSdub25lJyBzdHJva2U9JyUyM2I0NTMwOScgc3Ryb2tlLXdpZHRoPScwLjUnIG9wYWNpdHk9JzAuMicvPgogIDxjaXJjbGUgY3g9JzIwMCcgY3k9JzIyNScgcj0nMTAwJyBmaWxsPSdub25lJyBzdHJva2U9JyUyM2Q5NzcwNicgc3Ryb2tlLXdpZHRoPScwLjMnIG9wYWNpdHk9JzAuMTUnLz4KICA8cGF0aCBkPSdNMjAwIDIyNSBRMTg1IDE4MCAyMDAgMTQ4IFEyMTUgMTgwIDIwMCAyMjVaJyBmaWxsPSdub25lJyBzdHJva2U9JyUyM2Q5NzcwNicgc3Ryb2tlLXdpZHRoPScxLjInIG9wYWNpdHk9JzAuNTUnLz4KICA8cGF0aCBkPSdNMjAwIDIyNSBRMjM3IDE4OCAyNTggMTYyIFEyNDQgMTk2IDIwMCAyMjVaJyBmaWxsPSdub25lJyBzdHJva2U9JyUyM2Q5NzcwNicgc3Ryb2tlLXdpZHRoPScxLjInIG9wYWNpdHk9JzAuNTUnLz4KICA8cGF0aCBkPSdNMjAwIDIyNSBRMjQ4IDIxOCAyODAgMjI1IFEyNDggMjMyIDIwMCAyMjVaJyBmaWxsPSdub25lJyBzdHJva2U9JyUyM2Q5NzcwNicgc3Ryb2tlLXdpZHRoPScxLjInIG9wYWNpdHk9JzAuNTUnLz4KICA8cGF0aCBkPSdNMjAwIDIyNSBRMjQ0IDI1NCAyNTggMjg4IFEyMzcgMjYyIDIwMCAyMjVaJyBmaWxsPSdub25lJyBzdHJva2U9JyUyM2Q5NzcwNicgc3Ryb2tlLXdpZHRoPScxLjInIG9wYWNpdHk9JzAuNTUnLz4KICA8cGF0aCBkPSdNMjAwIDIyNSBRMjE1IDI3MCAyMDAgMzAyIFExODUgMjcwIDIwMCAyMjVaJyBmaWxsPSdub25lJyBzdHJva2U9JyUyM2Q5NzcwNicgc3Ryb2tlLXdpZHRoPScxLjInIG9wYWNpdHk9JzAuNTUnLz4KICA8cGF0aCBkPSdNMjAwIDIyNSBRMTU2IDI1NCAxNDIgMjg4IFExNjMgMjYyIDIwMCAyMjVaJyBmaWxsPSdub25lJyBzdHJva2U9JyUyM2Q5NzcwNicgc3Ryb2tlLXdpZHRoPScxLjInIG9wYWNpdHk9JzAuNTUnLz4KICA8cGF0aCBkPSdNMjAwIDIyNSBRMTUyIDIzMiAxMjAgMjI1IFExNTIgMjE4IDIwMCAyMjVaJyBmaWxsPSdub25lJyBzdHJva2U9JyUyM2Q5NzcwNicgc3Ryb2tlLXdpZHRoPScxLjInIG9wYWNpdHk9JzAuNTUnLz4KICA8cGF0aCBkPSdNMjAwIDIyNSBRMTYzIDE5NiAxNDIgMTYyIFExNTYgMTk2IDIwMCAyMjVaJyBmaWxsPSdub25lJyBzdHJva2U9JyUyM2Q5NzcwNicgc3Ryb2tlLXdpZHRoPScxLjInIG9wYWNpdHk9JzAuNTUnLz4KICA8Y2lyY2xlIGN4PScyMDAnIGN5PScyMjUnIHI9JzE4JyBmaWxsPSdub25lJyBzdHJva2U9JyUyM2ZiYmYyNCcgc3Ryb2tlLXdpZHRoPScwLjgnIG9wYWNpdHk9JzAuNCcvPgogIDxjaXJjbGUgY3g9JzIwMCcgY3k9JzIyNScgcj0nNicgZmlsbD0nJTIzZDk3NzA2JyBvcGFjaXR5PScwLjM1Jy8+CiAgPHBhdGggZD0nTTIwMCAzMDcgUTE5NiAzNTAgMTkyIDM5MCcgZmlsbD0nbm9uZScgc3Ryb2tlPSclMjNiNDUzMDknIHN0cm9rZS13aWR0aD0nMScgb3BhY2l0eT0nMC4zNScvPgogIDxwYXRoIGQ9J00xOTIgMzkwIFExNzAgMzYwIDE1NSAzNDAnIGZpbGw9J25vbmUnIHN0cm9rZT0nJTIzYjQ1MzA5JyBzdHJva2Utd2lkdGg9JzAuOCcgb3BhY2l0eT0nMC4yNScvPgogIDx0ZXh0IHg9JzIwMCcgeT0nOTYnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGZpbGw9JyUyM2Q5NzcwNicgZm9udC1zaXplPScxMScgb3BhY2l0eT0nMC41NScgZm9udC1mYW1pbHk9J3NlcmlmJyBsZXR0ZXItc3BhY2luZz0nMyc+6KeAIOmfsyDogZYg5YOPPC90ZXh0PgogIDxsaW5lIHgxPScxNDUnIHkxPScxMDInIHgyPScyNTUnIHkyPScxMDInIHN0cm9rZT0nJTIzZDk3NzA2JyBzdHJva2Utd2lkdGg9JzAuNScgb3BhY2l0eT0nMC4yNScvPgogIDx0ZXh0IHg9JzIwMCcgeT0nNDQwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmaWxsPSclMjNhODk1NmEnIGZvbnQtc2l6ZT0nMTAnIG9wYWNpdHk9JzAuNycgZm9udC1mYW1pbHk9J3NlcmlmJyBsZXR0ZXItc3BhY2luZz0nMSc+5ZyW5bqr5bCa5pyq5Yyv5YWlPC90ZXh0PgogIDx0ZXh0IHg9JzIwMCcgeT0nNDYwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmaWxsPSclMjM3ODY1NDgnIGZvbnQtc2l6ZT0nOScgb3BhY2l0eT0nMC41NScgZm9udC1mYW1pbHk9J3NlcmlmJyBsZXR0ZXItc3BhY2luZz0nMSc+6KuL6bue5Y+z5LiK6KeSIOKamSDliY3lvoDoqK3lrprljK/lhaU8L3RleHQ+Cjwvc3ZnPg==';
+                          }}
+                        />
+                      </div>
+
+                      {/* 下方留白區套用極致古宣紙紋理與金泥落款風格 */}
+                      <div className="polaroid-text paper-texture">
+                        <span className="text-xl md:text-2xl font-bold mb-1 tracking-[0.15em] text-[#1a1510]">{currentCard.name}</span>
+                        <span className="text-[10px] text-stone-500 tracking-[0.25em] font-sans uppercase">· {currentCard.title} ·</span>
+                        {/* v8.8 G1：手寫感日期落款（干支紀年＋西元），下載圖檔一併截入 */}
+                        <span className="polaroid-datestamp">{drawDate}</span>
+                      </div>
+                    </div>
+                    
+                    {/* 背後光圈泛光陰影 (隨著滑鼠擺動形成物理投射感) */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-amber-500/5 blur-[50px] rounded-full z-[-1] pointer-events-none"></div>
+                  </div>
+
+                  {/* 右側：奢華金邊金箔毛玻璃經卷面板 */}
+                  <div 
+                    className="flex-1 w-full max-w-lg bg-[#050812]/85 backdrop-blur-2xl border border-amber-500/10 rounded-[32px] p-8 md:p-10 shadow-[0_30px_70px_rgba(0,0,0,0.9)] relative overflow-hidden flex flex-col justify-center border-l-2 border-l-amber-500/30"
+                    style={{ transform: 'translateZ(20px)' }}
+                  >
+                    {/* 黃金電鍍流蘇邊飾 */}
+                    <div className="absolute top-0 bottom-0 left-0 w-[3px] bg-gradient-to-b from-amber-300 via-amber-600 to-amber-900 opacity-80"></div>
+
+                    <div className="mb-8 relative">
+                       {/* 暗色奢華「籤」浮水印背景 */}
+                       <div className="absolute -left-6 -top-12 text-9xl text-amber-500/[0.03] font-serif-tc select-none pointer-events-none font-bold">籤</div>
+                       
+                       <span className="text-[10px] font-cinzel text-amber-500/60 uppercase tracking-[0.3em] font-bold block mb-2">Sacred Poem</span>
+                       <h3 className="text-3xl md:text-4xl font-serif-tc text-stone-100 font-bold tracking-widest mb-3 relative z-10 drop-shadow-md title-shimmer">{currentCard.title}</h3>
+                       <div className="h-[2px] w-12 bg-gradient-to-r from-amber-500/60 to-transparent relative z-10"></div>
+                    </div>
+
+                    {/* 籤詩內文 (維持嚴格靠左、精確兩端對齊排版) */}
+                    <p className="text-base md:text-lg font-serif-tc text-stone-200 leading-[2.4] text-justify relative z-10 mb-10 drop-shadow-sm font-medium poem-reveal">
+                      「{currentCard.text}」
+                    </p>
+
+                    {/* v8.8 G3：解曰摺疊區（行動建議＋迴向語，預設收合） */}
+                    <div className="relative z-10 -mt-4 mb-8">
+                      <button
+                        onClick={() => {
+                          setShowAdvice(v => !v);
+                          if (adviceTimerRef.current) { clearTimeout(adviceTimerRef.current); adviceTimerRef.current = null; }
+                        }}
+                        className="flex items-center gap-2 text-[11px] font-serif-tc text-amber-500/80 hover:text-amber-400 tracking-[0.3em] transition-colors"
+                      >
+                        <span className="inline-block w-4 h-[1px] bg-amber-500/50"></span>
+                        解曰{showAdvice ? ' ▴' : ' ▾'}
+                      </button>
+                      {showAdvice && (
+                        <div className="mt-4 pl-4 border-l border-amber-500/20 space-y-3 advice-reveal">
+                          <p className="text-xs md:text-sm font-serif-tc text-stone-300 leading-[2.1] tracking-wide">
+                            <span className="text-amber-500/80 font-semibold">行動建議：</span>{currentCard.advice}
+                          </p>
+                          <p className="text-xs md:text-sm font-serif-tc text-stone-400 leading-[2.1] tracking-wide">
+                            <span className="text-amber-500/60 font-semibold">迴向語：</span>{currentCard.blessing}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* v9.9：上台合影掃碼區（出示給大螢幕相機，自動帶出此尊觀音；不影響下載的拍立得影像） */}
+                    <div className="relative z-10 mb-7 flex items-center gap-4 rounded-2xl border border-amber-500/15 bg-slate-950/40 p-3.5 md:p-4">
+                      <div
+                        ref={qrRef}
+                        className="shrink-0 bg-white rounded-lg flex items-center justify-center"
+                        style={{ width: '104px', height: '104px', padding: '4px' }}
+                      ></div>
+                      <div className="font-serif-tc leading-[1.9]">
+                        <p className="text-[11px] font-cinzel tracking-[0.25em] text-amber-500/60 uppercase mb-1">On-Stage Photo</p>
+                        <p className="text-sm md:text-base text-stone-200 font-medium">上台合影．出示此碼</p>
+                        <p className="text-xs md:text-sm text-stone-400 mt-1">走到台前相機前掃描，<br/>大螢幕將自動為您請出{currentCard.title}，與您同框合影。</p>
+                      </div>
+                    </div>
+
+                    {/* 底部高奢感操作按鈕 */}
+                    <div className="flex flex-wrap gap-4 relative z-10 mt-auto">
+                      <button
+                        onClick={handleResetRequest}
+                        disabled={isDownloading}
+                        className="px-6 py-2.5 rounded-full border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-2 disabled:opacity-50 text-xs tracking-wider font-semibold"
+                      >
+                        {/* V6：換為旋轉箭頭，語意符合「再抽一次」 */}
+                        <Icons.Refresh /> 重新求籤
+                      </button>
+                      <button 
+                        onClick={handleDownload}
+                        disabled={isDownloading || !canDownloadCurrentCard}
+                        className={`px-6 py-2.5 rounded-full ${
+                          isDownloading
+                            ? 'bg-amber-950 cursor-wait'
+                            : !isPhotoReady
+                              ? 'bg-slate-900 text-slate-500 cursor-not-allowed border border-slate-800'
+                              : !canDownloadCurrentCard
+                                ? 'bg-slate-900 text-slate-600 cursor-not-allowed border border-slate-800'
+                                : 'bg-gradient-to-r from-amber-700 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-500 text-white shadow-[0_10px_20px_rgba(217,119,6,0.15)] hover:shadow-[0_15px_30px_rgba(217,119,6,0.3)]'
+                        } transition-all flex items-center gap-2 font-semibold text-xs tracking-wider`}
+                        title={
+                          !isPhotoReady
+                            ? '顯影動畫完成後即可下載（約 5 秒）'
+                            : !canDownloadCurrentCard
+                              ? '地端環境請先點選右上角齒輪設定匯入圖庫'
+                              : ''
+                        }
+                      >
+                        {isDownloading ? <Icons.Loading /> : <Icons.Download />}
+                        {isDownloading
+                          ? '轉檔中...'
+                          : !isPhotoReady
+                            ? '顯影中...'
+                            : !canDownloadCurrentCard
+                              ? '請先快取圖庫'
+                              : '下載籤詩相片'}
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* U3：行動端 result 底部快捷 Bar（桌機 lg: 自動隱藏，主內容已加 pb-20 避讓） */}
+          {status === 'result' && currentCard && (
+            <div className="mobile-action-bar">
+              <button
+                onClick={handleResetRequest}
+                disabled={isDownloading}
+                className="flex-1 py-2.5 rounded-full border border-slate-700 text-slate-300 text-xs font-serif-tc tracking-widest flex items-center justify-center gap-2 disabled:opacity-40 active:scale-95 transition-all bg-slate-900/60"
+              >
+                <Icons.Refresh /> 重新求籤
+              </button>
+              <button
+                onClick={handleDownload}
+                disabled={isDownloading || !canDownloadCurrentCard}
+                className={`flex-1 py-2.5 rounded-full text-xs font-serif-tc tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-all ${
+                  isDownloading
+                    ? 'bg-amber-950 cursor-wait text-amber-600'
+                    : !isPhotoReady
+                      ? 'bg-slate-900/60 border border-slate-700 text-slate-500 cursor-not-allowed'
+                      : !canDownloadCurrentCard
+                        ? 'bg-slate-900/60 border border-slate-700 text-slate-500 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-amber-700 to-amber-600 text-white shadow-[0_4px_16px_rgba(217,119,6,0.35)]'
+                }`}
+              >
+                {isDownloading ? <Icons.Loading /> : <Icons.Download />}
+                {isDownloading ? '轉檔中...' : !isPhotoReady ? '顯影中...' : !canDownloadCurrentCard ? '請先快取圖庫' : '下載籤詩相片'}
+              </button>
+              {/* v8.8 T4：Web Share 分享鈕，環境不支援時自動隱藏不佔位 */}
+              {supportsWebShare && (
+                <button
+                  onClick={handleShare}
+                  disabled={isDownloading || !canDownloadCurrentCard}
+                  className={`flex-1 py-2.5 rounded-full text-xs font-serif-tc tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-all ${
+                    isDownloading || !canDownloadCurrentCard
+                      ? 'bg-slate-900/60 border border-slate-700 text-slate-500 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-indigo-800 to-indigo-700 text-white shadow-[0_4px_16px_rgba(99,102,241,0.3)]'
+                  }`}
+                >
+                  <Icons.Share /> 分享
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Footer */}
+          {/* U3：result 時行動端底部 bar 高度為 ~72px，footer 加 pb-24 lg:pb-0 避讓 */}
+          <footer className={`mt-20 text-slate-600 text-[10px] text-center font-serif-tc tracking-[0.2em] relative z-10 leading-relaxed ${status === 'result' ? 'pb-24 lg:pb-0' : ''}`}>
+            <p className="opacity-95">「願以此功德，普及於一切，我等與眾生，皆共成佛道」</p>
+            <p className="mt-2 opacity-50 font-sans">© 2026 淨善樂人 | THE THIRTEEN GUANYINS ORACLE</p>
+          </footer>
+
+          {/* T1-3：重新求籤確認面板 */}
+          {showResetConfirm && (
+            <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={handleResetCancel}>
+              <div className="bg-[#0a0e1c] border border-amber-500/25 rounded-2xl p-7 max-w-[300px] mx-4 text-center shadow-[0_20px_60px_rgba(0,0,0,0.9)]" onClick={e => e.stopPropagation()}>
+                <div className="text-2xl mb-3 opacity-60">🪷</div>
+                <p className="text-sm font-serif-tc text-stone-200 tracking-wide leading-[2] mb-6">
+                  菩薩已賜籤示，<br/>確定要重新求籤嗎？
+                </p>
+                <div className="flex gap-3 justify-center">
+                  <button onClick={handleResetCancel} className="px-5 py-2.5 rounded-full border border-slate-700 text-slate-400 text-xs font-serif-tc tracking-widest hover:bg-slate-800 transition-all">
+                    再想想
+                  </button>
+                  <button onClick={handleResetConfirm} className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-700 to-amber-600 text-white text-xs font-serif-tc tracking-widest hover:from-amber-600 hover:to-amber-500 transition-all shadow-md">
+                    重新求籤
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 地端圖庫快取 Modal */}
+          {/* F3：外層 overlay 改用 alignItems flex-end + safe-area padding，適應 iOS 虛擬鍵盤 */}
+          {showGalleryModal && (
+            <div className="fixed inset-0 bg-black/95 backdrop-blur-md z-[100] flex items-end justify-center p-4" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+              {/* F3：Modal 本體加 max-height: 100dvh 避免超出可視區，並加 overflow-y-auto 讓內容可捲動 */}
+              <div className="bg-[#0b0f1d] border border-slate-800/80 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col" style={{ maxHeight: 'calc(100dvh - 2rem)' }}>
+                <div className="p-6 border-b border-slate-800/80 flex justify-between items-center">
+                  <h3 className="text-lg font-serif-tc font-bold text-amber-500 flex items-center gap-2">
+                    <Icons.Image /> 地端圖庫與相干度管理
+                  </h3>
+                  <button onClick={() => setShowGalleryModal(false)} className="text-slate-400 hover:text-white transition-colors">
+                    <Icons.Close />
+                  </button>
+                </div>
+                
+                <div className="p-6 space-y-4 overflow-y-auto">
+                  <div className="bg-slate-900/60 p-4 rounded-xl text-xs text-stone-300 leading-relaxed border border-slate-800">
+                    <p className="font-bold text-amber-400 mb-2">💡 本地安全政策限制提示：</p>
+                    <p>當您以離線檔案模式 (file:///) 開啟此網頁時，瀏覽器出於沙盒安全機制，會限制 canvas 直接繪製地端圖檔。這將導致「下載籤詩照片」按鈕失效。</p>
+                    <p className="mt-2"><strong>解決方案：</strong>點擊「選擇圖片匯入」並全選選取您的 13 張觀音像圖片。系統會自動將其保存於瀏覽器的 IndexedDB 內部數據庫，即可突破限制。</p>
+                  </div>
+
+                  <div className="flex items-center justify-between bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+                    <div>
+                      <p className="text-xs text-slate-400">當前快取進度</p>
+                      <p className="text-2xl font-bold text-white">
+                        <span className={Object.keys(dbImages).length === 13 ? 'text-emerald-400' : 'text-amber-400'}>
+                          {Object.keys(dbImages).length}
+                        </span> / 13
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <input type="file" ref={fileInputRef} onChange={handleFileUpload} multiple accept="image/*" className="hidden" />
+                      <button onClick={() => fileInputRef.current.click()} className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold transition-colors shadow-md">
+                        選擇圖片匯入
+                      </button>
+                      {Object.keys(dbImages).length > 0 && (
+                        <button onClick={handleClearGallery} className="p-2 bg-rose-950/30 hover:bg-rose-900/40 text-rose-400 rounded-lg transition-colors" title="清空圖庫">
+                          <Icons.Trash />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 max-h-40 overflow-y-auto pr-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      {guanyinCards.map(card => (
+                        <div key={card.id} className="flex items-center gap-2 text-xs bg-slate-900 p-2 rounded border border-slate-800">
+                          {dbImages[card.image] ? <span className="text-emerald-400 text-xs">●</span> : <span className="text-slate-700 text-xs">○</span>}
+                          <span className={dbImages[card.image] ? 'text-slate-200' : 'text-slate-500'}>{card.image}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
